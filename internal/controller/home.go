@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"go-prototype-new/internal/model"
+	"go-prototype-new/internal/repository"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,23 +14,23 @@ type (
 	}
 
 	homeController struct {
-		model model.HomeModel
+		Repository repository.HomeRepository
 	}
 )
 
-func NewHomeController(model model.HomeModel) HomeController {
+func NewHomeController(homeRepository repository.HomeRepository) HomeController {
 	return &homeController{
-		model: model,
+		Repository: homeRepository,
 	}
 }
 
 func (controller *homeController) GetHome(c *gin.Context) {
-	resp := make(map[string]string)
+	resp := make(map[string]interface{})
 
 	//call model
-	home := controller.model.GetHome("Hello World")
+	home := controller.Repository.GetHome(c.Request.Context())
 
-	resp["message"] = home
+	resp["data"] = home
 
 	c.JSON(http.StatusOK, resp)
 }

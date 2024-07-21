@@ -2,8 +2,8 @@
 port?=5000
 
 db?=pba
-db_user?=andi
-db_password?=23031996
+db_user?=root
+db_password?=
 db_port?=5432
 db_schema?=restaurant
 

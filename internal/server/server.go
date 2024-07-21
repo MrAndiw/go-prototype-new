@@ -12,6 +12,7 @@ import (
 	"go-prototype-new/internal/app/database"
 	"go-prototype-new/internal/controller"
 	"go-prototype-new/internal/model"
+	"go-prototype-new/internal/repository"
 )
 
 func NewServer() *http.Server {
@@ -19,14 +20,15 @@ func NewServer() *http.Server {
 
 	port, _ := strconv.Atoi(os.Getenv("PORT"))
 
-	homeModel := model.NewHomeModel(db)
-	homeController := controller.NewHomeController(homeModel)
+	homeModel := model.NewHomeModel()
+	homeRepository := repository.NewHomeRepository(db, homeModel)
+	homeController := controller.NewHomeController(homeRepository)
 
 	router := RegisterRoutes(homeController)
 
 	// Declare Server config
 	server := &http.Server{
-		Addr:         fmt.Sprintf(":%d", port),
+		Addr:         fmt.Sprintf("%s:%d", os.Getenv("DB_HOST"), port),
 		Handler:      router,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,

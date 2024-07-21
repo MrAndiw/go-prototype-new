@@ -3,6 +3,8 @@ package tests
 import (
 	"go-prototype-new/internal/app/database"
 	"go-prototype-new/internal/controller"
+	"go-prototype-new/internal/model"
+	"go-prototype-new/internal/repository"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -12,10 +14,12 @@ import (
 
 func TestHelloWorldHandler(t *testing.T) {
 	db := database.New()
-	healtcheckController := controller.NewHomeController(db)
+	homeModel := model.NewHomeModel()
+	homeRepo := repository.NewHomeRepository(db, homeModel)
+	homeController := controller.NewHomeController(homeRepo)
 
 	r := gin.New()
-	r.GET("/", healtcheckController.GetHome)
+	r.GET("/", homeController.GetHome)
 	// Create a test HTTP request
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
